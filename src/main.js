@@ -5,6 +5,8 @@ import store from './store'
 import ElementUI from 'element-ui';
 import '@/assets/css/reset.css'
 import 'element-ui/lib/theme-chalk/index.css';
+// 引入axios
+import  '@/assets/js/axios.config.js'
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false

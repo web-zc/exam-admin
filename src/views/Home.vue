@@ -221,9 +221,8 @@ export default {
 }
 .el-main {
   background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
+ 
+  
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
