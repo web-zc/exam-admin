@@ -4,6 +4,7 @@ import Login from './views/Login.vue'
 import Home from './views/Home.vue'
 import UserList from './components/users/UserList'
 import RoleList from './components/role/RoleList'
+import AuthList from './components/role/AuthList'
 Vue.use(Router)
 
 export default new Router({
@@ -33,6 +34,14 @@ export default new Router({
           component:RoleList,
           meta:{
             name:'角色列表'
+          }
+        },
+        {
+          path:'authlist',
+          name:'authlist',
+          component:AuthList,
+          meta:{
+            name:'权限列表'
           }
         }
       ]

@@ -1,7 +1,6 @@
 <template>
   <div class="userlist">
-    <!-- <!-- 搜索框 -->
-
+    <!-- 搜索框 -->
     <ul class="userlist-header">
       <li>
         <el-input placeholder="用户名" clearable prefix-icon="el-icon-search" v-model="inputSearch"></el-input>
