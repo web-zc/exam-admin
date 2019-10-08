@@ -21,8 +21,8 @@
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="rolelist">
           <div>
-            <el-button @click="editDiom(rolelist.row)">编辑</el-button>
-            <el-button @click="delRole(rolelist.row._id)" type="danger">删除</el-button>
+            <el-button size="small" @click="editDiom(rolelist.row)">编辑</el-button>
+            <el-button size="small" @click="delRole(rolelist.row._id)" type="danger">删除</el-button>
           </div>
         </template>
       </el-table-column>

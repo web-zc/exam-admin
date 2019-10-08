@@ -98,7 +98,6 @@
         :total="total"
       ></el-pagination>
     </div>
-    {{total}}
     <!-- 新增用户 -->
     <el-dialog
       title="新增用户"
