@@ -16,7 +16,7 @@
       <el-table-column prop="identity" label="角色名称"></el-table-column>
       <el-table-column prop="des" label="角色描述"></el-table-column>
       <el-table-column label="创建时间">
-        <template slot-scope="rolelist">{{rolelist.row.date}}</template>
+        <template slot-scope="rolelist">{{rolelist.row.date| convertTime('YYYY-MM-DD')}}</template>
       </el-table-column>
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="rolelist">

@@ -29,7 +29,7 @@
       <el-table-column prop="auth" label="管理模块"></el-table-column>
       <el-table-column prop="icon" label="图标"></el-table-column>
       <el-table-column label="创建时间">
-        <template slot-scope="authlist">{{authlist.row.date}}</template>
+        <template slot-scope="authlist">{{authlist.row.date| convertTime('YYYY-MM-DD')}}</template>
       </el-table-column>
       <el-table-column label="操作" width="360" align="center">
         <template slot-scope="authlist">
