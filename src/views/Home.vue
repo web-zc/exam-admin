@@ -18,14 +18,14 @@
         </template>
         <el-menu-item @click="zhou" index="/home/userlist">用户列表</el-menu-item>
       </el-submenu>
-      <!-- <el-submenu index="2">
+      <el-submenu index="2">
         <template slot="title">
           <i class="el-icon-s-promotion"></i>
           <span>权限管理</span>
         </template>
         <el-menu-item @click="zhou" index="/home/rolelist">角色列表</el-menu-item>
         <el-menu-item @click="zhou" index="/home/authlist">权限列表</el-menu-item>
-      </el-submenu> -->
+      </el-submenu>
        <el-submenu index="3">
         <template slot="title">
           <i class="el-icon-s-promotion"></i>
