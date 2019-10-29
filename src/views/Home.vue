@@ -2,7 +2,7 @@
   <el-container id="home">
     <!-- 侧边菜单 -->
     <el-menu
-    unique-opened
+      unique-opened
       :default-active="tabValue"
       router
       background-color="#304156"
@@ -11,6 +11,7 @@
       class="el-menu-vertical-demo"
       :collapse="isCollapse"
     >
+      <img class="imgs" src="../assets/img/logo.png" alt srcset />
       <el-submenu index="1">
         <template slot="title">
           <i class="el-icon-user-solid"></i>
@@ -26,12 +27,19 @@
         <el-menu-item @click="zhou" index="/home/rolelist">角色列表</el-menu-item>
         <el-menu-item @click="zhou" index="/home/authlist">权限列表</el-menu-item>
       </el-submenu>
-       <el-submenu index="3">
+      <el-submenu index="3">
         <template slot="title">
-          <i class="el-icon-s-promotion"></i>
+          <i class="el-icon-s-opportunity"></i>
           <span>题目管理</span>
         </template>
         <el-menu-item @click="zhou" index="/home/titlelist">题目列表</el-menu-item>
+      </el-submenu>
+      <el-submenu index="4">
+        <template slot="title">
+          <i class="el-icon-s-order"></i>
+          <span>试卷管理</span>
+        </template>
+        <el-menu-item @click="zhou" index="/home/paperlist">试卷列表</el-menu-item>
       </el-submenu>
     </el-menu>
     <el-container>
@@ -40,6 +48,19 @@
           <!-- icon -->
           <div class="icon-warp" @click="isCollapse=!isCollapse">
             <i class="el-icon-s-fold"></i>
+          </div>
+          <div class="userx">
+            <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                {{username}}
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <span @click="logout">退出</span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
         <!-- tabs -->
@@ -60,7 +81,11 @@
       </el-header>
       <!-- 主体区 -->
       <el-main>
-        <router-view></router-view>
+        <transition mode="out-in" name="zc">
+          <keep-alive>
+            <router-view class="postionx"></router-view>
+          </keep-alive>
+        </transition>
       </el-main>
     </el-container>
   </el-container>
@@ -69,8 +94,12 @@
 <script>
 import { constants } from "crypto";
 export default {
+  created() {
+    this.username = localStorage.getItem("username");
+  },
   watch: {
-    $route: function(n, o) { // 监听路由追加到tabs数组
+    $route: function(n, o) {
+      // 监听路由追加到tabs数组
       this.tabValue = n.path;
       let aaa = this.tabData.filter(value => {
         return value.name == n.path;
@@ -85,9 +114,11 @@ export default {
   },
   data() {
     return {
+      username: "", // 用户名
       isCollapse: false, // 菜单收缩
       tabValue: "/home/userlist", // 默认显示
-      tabData: [ // tabs数组
+      tabData: [
+        // tabs数组
         {
           name: "/home/userlist",
           title: "用户列表"
@@ -96,6 +127,17 @@ export default {
     };
   },
   methods: {
+    // 退出
+    logout() {
+    
+      localStorage.setItem('token','')
+      this.$router.push("/");
+      this.$message({
+          message: "登出成功",
+          type: "success"
+        });
+    },
+
     zhou(e) {
       // 解决重复点击路由
 
@@ -117,15 +159,16 @@ export default {
     },
     tabRemove(e) {
       // 删除标签
-       let aaa = this.tabData.filter(value => {
+      let aaa = this.tabData.filter(value => {
         return value.name != e;
       });
-      this.tabData =aaa
-      if(aaa.length==0){
-        this.$route.push('/home/userlist')
-      }else{
-        this.tabValue = aaa[aaa.length-1].name
-         this.$router.push(`${this.tabValue}`)
+      this.tabData = aaa;
+      if (aaa.length == 0) {
+        console.log('/')
+        this.$router.push("/home/userlist");
+      } else {
+        this.tabValue = aaa[aaa.length - 1].name;
+        this.$router.push(`${this.tabValue}`);
       }
     }
   }
@@ -141,6 +184,7 @@ export default {
   height: 86px !important;
 
   .home-header {
+    position: relative;
     align-items: center;
     display: flex;
     box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
@@ -229,8 +273,7 @@ export default {
 }
 .el-main {
   background-color: #e9eef3;
- 
-  
+  position: relative;
 }
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
@@ -242,5 +285,51 @@ export default {
 }
 /deep/ .el-menu-item:hover {
   background-color: #001528 !important;
+}
+/* 动画进入之前，动画离开之后 */
+.zc-enter {
+  opacity: 0;
+}
+.zc-leave-to {
+  opacity: 0;
+}
+/* 动画入场时间段，动画离场时间段 */
+.zc-enter-active {
+  transition: all 0.08s ease;
+}
+.zc-leave-active {
+  // right: -40px;
+  transform: translateX(40px);
+  // margin-left: 40px;
+  transition: all 0.36s ease;
+}
+
+.postionx {
+ width: 90%;
+  width:  calc(100% - 40px);
+   width: -moz-calc(100% -40px); 
+    width: -webkit-calc(100% - 40px); 
+ 
+  position: absolute;
+}
+.imgs {
+  width: 32%;
+  display: block;
+  margin: 0 auto;
+  margin-top: 14px;
+}
+.userx {
+  position: absolute;
+  right: 40px;
+}
+.el-dropdown-link {
+  cursor: pointer;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
+}
+.el-dropdown-menu__item {
+  line-height: 19px;
+  font-size: 12px;
 }
 </style>

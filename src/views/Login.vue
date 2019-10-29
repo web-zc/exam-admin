@@ -8,7 +8,7 @@
       size=" small"
     >
       <h1 class="login-title">考试后台管理</h1>
-      <el-form-item prop="name">
+      <el-form-item prop="username">
         <el-input v-model="loginFrom.username">
           <i slot="prefix" class="el-icon-user-solid"></i>
         </el-input>
@@ -29,23 +29,33 @@ export default {
   data() {
     return {
       loginFrom: {
-        username: "",
-        password: ""
+        username: "admin",
+        password: "123456"
       },
       rules: {
-        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
   },
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+          const res = await this.$http.post(`/users/login`,this.loginFrom)
+        
+          if (res.data.meta.status == 200) {
+              
+             localStorage.setItem('token',res.data.token)
+            localStorage.setItem('username', res.data.data.username)
+          this.$router.push('/home/userlist')
+        this.$message({
+          message: "登陆成功",
+          type: "success"
+        });
+      } else {
+        this.$message.error("登陆失败");
+      }
         }
       });
     }

@@ -6,9 +6,22 @@ import UserList from './components/users/UserList'
 import RoleList from './components/role/RoleList'
 import AuthList from './components/role/AuthList'
 import TitleList from './components/title/TitleList'
+import PaperList from './components/paper/PaperList'
+// 进度条
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({ 
+      minimum: 0.1,    //    配置最低百分比
+      ease: 'ease',    //    配置动画模式
+      speed: '500',    //    配置动画速度
+      trickle: false,    //    关闭进度条步进
+      showSpinner: false,    //    关闭进度环
+  });
+
 Vue.use(Router)
 
-export default new Router({
+ const router= new Router({
   routes: [
     {
       path: '/',
@@ -52,6 +65,14 @@ export default new Router({
           meta:{
             name:'题目列表'
           }
+        },
+        {
+          path:'paperlist',
+          name:'paperlist',
+          component:PaperList,
+          meta:{
+            name:'试卷列表'
+          }
         }
       ]
     }
@@ -64,3 +85,11 @@ const originalPush = Router.prototype.push
 Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
+// 进度条
+router.beforeEach((to,from,next)=>{
+  NProgress.start() // 开启
+  NProgress.done() // 关闭
+  next()
+
+})
+export default router

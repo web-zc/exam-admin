@@ -52,6 +52,13 @@
     <el-table :data="userList" border height="68vh" style="width: 100%;">
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="username" label="用户名"></el-table-column>
+       <el-table-column  width="100" align="center" label="头像">
+        <template slot-scope="userlist">
+          <div>
+            <img :src="userlist.row.avatar" alt="" srcset="" class="imgx">
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="zname" label="真实姓名"></el-table-column>
       <el-table-column prop="mobile" width="180" label="手机号"></el-table-column>
       <el-table-column prop="classx" label="学级"></el-table-column>
@@ -72,7 +79,7 @@
           >{{userlist.row.state==='1'?'启用':'禁用'}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="360" align="center">
+      <el-table-column label="操作" width="300" align="center">
         <template slot-scope="userlist">
           <div>
             <el-button
@@ -151,10 +158,11 @@
     <el-dialog
       title="编辑用户"
       :visible.sync="editDio"
-      width="30%"
+      width="500px"
+      top
+      center
       destroy-on-close
       :before-close="coloseAddDio"
-      center
     >
       <el-form
         size="small"
@@ -165,6 +173,19 @@
         label-width="100px"
         class="demo-addFrom"
       >
+        <el-form-item label="头像">
+          <el-upload
+            class="avatar-uploader"
+            :action="uploadAction"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+         
+        </el-form-item>
         <el-form-item label="用户名">
           <el-input type="text" v-model="addFrom.username" autocomplete="off"></el-input>
         </el-form-item>
@@ -242,6 +263,8 @@
 export default {
   data() {
     return {
+      imageUrl: '',
+      uploadAction: "", // 文件上传
       searchFrom: {
         name: "",
         x: ""
@@ -324,6 +347,7 @@ export default {
     },
     submitEditForm(formName, id) {
       // 提交编辑用户表单
+      // this.addFrom.avatar = this.imageUrl
       this.$refs[formName].validate(async valid => {
         if (valid) {
           const res = await this.$http.put(`/users/${id}`, this.addFrom);
@@ -366,7 +390,9 @@ export default {
     },
     coloseAddDio() {
       // 关闭新增用户弹窗
+
       this.addFrom = {};
+        // this.addFrom.avatar = this.imageUrl
       this.editDio = false;
       this.addDio = false;
       this.fDio = false;
@@ -413,7 +439,8 @@ export default {
         }, 300);
       }
     },
-    async bugz() { // 解决一个跳页bug
+    async bugz() {
+      // 解决一个跳页bug
       const res = await this.$http.get(
         `/users/search?username=${this.inputSearch}&classx=${this.classz}&iid=${this.rolez}&gender=${this.sexz}&state=${this.stausz}&pagesize=${this.pagesize}&pagenumber=${this.pagenumber}`
       );
@@ -422,6 +449,9 @@ export default {
     },
     editDiom(row) {
       // 打开编辑用的弹窗
+  this.imageUrl= '',
+      // this.uploadAction = "http://localhost:4000/api/users/upload/" + row._id;
+      this.uploadAction = "http://exam.zcmax.top/api/users/upload/" + row._id;
       this.editDio = true;
       this.addFrom = row;
     },
@@ -441,7 +471,24 @@ export default {
       // 页码跳转
       this.pagenumber = val;
       this.searchUser();
-    }
+    },
+     handleAvatarSuccess(res, file) { // 图片上传成功
+        this.imageUrl = URL.createObjectURL(file.raw);
+         this.addFrom.avatar = res.data.avatar
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片必须是 JPG/PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      }
+    
   }
 };
 </script>
@@ -480,4 +527,32 @@ export default {
 .fenye {
   margin-top: 16px;
 }
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .imgx {
+    width: 50px;
+    height: 50px;
+  }
 </style>
